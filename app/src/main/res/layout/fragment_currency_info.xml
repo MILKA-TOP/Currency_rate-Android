@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/standard_bottom_sheet1"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        app:behavior_hideable="true">
+
+
+        <include
+            android:id="@+id/standard_bottom_sheet"
+            layout="@layout/top_currency_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <FrameLayout
+            android:id="@+id/graph_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/dynamic_button_panel"
+            app:layout_constraintTop_toBottomOf="@+id/standard_bottom_sheet">
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/graph"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toTopOf="@+id/dynamic_button_panel"
+                app:layout_constraintTop_toBottomOf="@+id/standard_bottom_sheet" />
+
+        </FrameLayout>
+
+
+        <include
+            android:id="@+id/loading_progressbar"
+            layout="@layout/loading_progressbar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/dynamic_button_panel"
+            app:layout_constraintTop_toBottomOf="@+id/standard_bottom_sheet" />
+
+        <include
+            android:id="@+id/dynamic_button_panel"
+            layout="@layout/dynamic_button_panel"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

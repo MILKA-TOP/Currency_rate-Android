@@ -1,0 +1,23 @@
+<resources>
+    <string-array name="language_entries">
+        <item>Русский</item>
+        <item>English</item>
+    </string-array>
+
+    <string-array name="language_values">
+        <item>ru</item>
+        <item>en</item>
+    </string-array>
+
+    <string-array name="theme_entries">
+        <item>Автоматически (как на вашем девайсе)</item>
+        <item>Светлая</item>
+        <item>Темная</item>
+    </string-array>
+
+    <string-array name="theme_values">
+        <item>base</item>
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+</resources>

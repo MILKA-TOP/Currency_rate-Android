@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/full_list_fragment"
+        android:icon="@drawable/ic_baseline_format_list_bulleted_24"
+        android:title="@string/list" />
+    <item
+        android:id="@+id/favourite_fragment"
+        android:icon="@drawable/ic_baseline_star_24"
+        android:title="@string/favourite" />
+
+    <item
+        android:id="@+id/settings_fragment"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="@string/settings" />
+
+</menu>

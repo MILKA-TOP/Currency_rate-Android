@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/currency_tem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
+
+    <FrameLayout
+        android:id="@+id/currency_info_pannel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/rounded_corner_left_up"
+        app:layout_constraintEnd_toStartOf="@+id/favourite_add"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/cur_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/leto_text_sans_defect"
+            android:text="@string/currency_name"
+            android:textSize="20sp" />
+
+
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/rounded_corner_left_down"
+        app:layout_constraintEnd_toStartOf="@+id/favourite_add"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currency_info_pannel">
+
+        <TextView
+            android:id="@+id/cur_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_margin="5dp"
+            android:fontFamily="@font/leto_text_sans_defect"
+            android:text="@string/currency_value"
+            android:textSize="17sp" />
+
+
+        <TextView
+            android:id="@+id/cur_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:text="@string/currency_id" />
+    </FrameLayout>
+
+    <ImageButton
+        android:id="@+id/favourite_add"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@drawable/rounded_corner_right"
+
+        android:src="@drawable/ic_baseline_star_border_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/currency_info_pannel"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/add_to_favourite_description" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
