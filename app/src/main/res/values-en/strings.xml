@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reply_title">App language</string>
+    <string name="settings">Settings</string>
+    <string name="favourite">Favourite</string>
+    <string name="list">List</string>
+    <string name="currency_name">Currency name</string>
+    <string name="currency_value">Currency value</string>
+    <string name="currency_id">Currency ID</string>
+    <string name="years5">5 years</string>
+    <string name="years1">1 year</string>
+    <string name="month1">1 month</string>
+    <string name="weeks2">2 weeks</string>
+    <string name="weeks1">1 week</string>
+    <string name="currency_search">Currency search</string>
+    <string name="currency_name_bottom">CURRENCY NAME</string>
+    <string name="currency_changes">Currency changes</string>
+    <string name="language">Language</string>
+    <string name="theme">Theme</string>
+
+</resources>

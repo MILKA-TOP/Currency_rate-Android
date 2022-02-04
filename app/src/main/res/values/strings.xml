@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name" translatable="false">Stocks</string>
+    <string name="reply_title">App language</string>
+    <string name="settings">Настройки</string>
+    <string name="favourite">Избранное</string>
+    <string name="list">Список</string>
+    <string name="currency_name">Название валюты</string>
+    <string name="currency_value">Курс валюты</string>
+    <string name="currency_id">ID валюты</string>
+    <string name="years5">5 лет</string>
+    <string name="years1">1 год</string>
+    <string name="month1">1 месяц</string>
+    <string name="weeks2">2 недели</string>
+    <string name="weeks1">1 неделя</string>
+    <string name="currency_search">Поиск валюты</string>
+    <string name="currency_name_bottom">НАЗВАНИЕ ВАЛЮТЫ</string>
+    <string name="currency_changes">Изменение валюты</string>
+    <string name="language">Язык</string>
+    <string name="theme">Тема</string>
+    <string name="add_to_favourite_description" translatable="false">Add to favourite</string>
+
+</resources>
