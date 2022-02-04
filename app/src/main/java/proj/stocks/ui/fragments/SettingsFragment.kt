@@ -1,4 +1,4 @@
-package proj.stocks.fragments
+package proj.stocks.ui.fragments
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.preference.PreferenceFragmentCompat
-import proj.stocks.MainActivity
+import proj.stocks.ui.MainActivity
 import proj.stocks.R
 import proj.stocks.util.SHARE_THEME
 

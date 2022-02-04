@@ -1,4 +1,4 @@
-package proj.stocks.database
+package proj.stocks.model.database
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -20,9 +20,11 @@ interface ResponseCBR_DAO {
     @Query("SELECT * FROM $DATABASE_NAME WHERE isFavourite = 1")
     fun getFavouriteList(): List<CurrencyDataCBR>
 
-
     @Query("SELECT * FROM $DATABASE_NAME WHERE currId = :currId")
     fun getCurrency(currId: String): CurrencyDataCBR
+
+    @Query("UPDATE $DATABASE_NAME SET isFavourite = :updIsFavourite WHERE currId = :currId")
+    fun updateFavourite(currId: String, updIsFavourite: Boolean)
 
     @Update
     fun updateCurrency(currency: CurrencyDataCBR)

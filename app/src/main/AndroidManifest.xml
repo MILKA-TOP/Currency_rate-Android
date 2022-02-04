@@ -15,7 +15,7 @@
 
         <activity
             android:configChanges="uiMode|locale"
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -7,17 +7,17 @@
 
     <fragment
         android:id="@+id/full_list_fragment"
-        android:name="proj.stocks.fragments.FullListFragment"
+        android:name="proj.stocks.ui.fragments.FullListFragment"
         tools:layout="@layout/fragment_full_list" />
 
     <fragment
         android:id="@+id/favourite_fragment"
-        android:name="proj.stocks.fragments.FullListFragment"
+        android:name="proj.stocks.ui.fragments.FullListFragment"
         tools:layout="@layout/fragment_full_list" />
 
     <fragment
         android:id="@+id/settings_fragment"
-        android:name="proj.stocks.fragments.SettingsFragment" />
+        android:name="proj.stocks.ui.fragments.SettingsFragment" />
 
 
 </navigation>

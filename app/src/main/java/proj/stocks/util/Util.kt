@@ -1,10 +1,11 @@
 package proj.stocks.util
 
 import android.content.Context
+import android.content.res.Resources
 import android.os.Parcelable
-import android.util.Log
 import android.view.animation.AlphaAnimation
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DiffUtil
 import kotlinx.parcelize.Parcelize
@@ -16,10 +17,6 @@ import java.util.*
 @Parcelize
 enum class NavigationType : Parcelable {
     FULL, FAVOURITE, UNKNOWN
-}
-
-enum class RecyclerDrawType {
-    FIRST_DRAW, CHANGE_OBJECT, REDRAW
 }
 
 @Parcelize
@@ -72,9 +69,9 @@ fun getUserTheme(context: Context) {
         "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
     }
-    Log.d("THEME", pref.getString("theme", "base").toString())
 }
 
+@Suppress("DEPRECATION")
 fun getUserLanguage(context: Context) {
     val pref = PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -89,6 +86,15 @@ fun getUserLanguage(context: Context) {
     context.resources.updateConfiguration(config, context.resources.displayMetrics)
 }
 
+fun getNavigationType(id: Int?): NavigationType {
+    when (id) {
+        R.id.full_list_fragment -> return NavigationType.FULL
+        R.id.favourite_fragment -> return NavigationType.FAVOURITE
+    }
+    return NavigationType.UNKNOWN
+}
+
+fun colorFromRes(id: Int, resources: Resources): Int = ResourcesCompat.getColor(resources, id, null)
 
 val minusTypeMap = mapOf(
     DynamicPeriod.WEEK1 to DynamicPeriodMinus(1, ChronoUnit.WEEKS, R.id.week1),
@@ -108,10 +114,7 @@ const val DATABASE_NAME = "INFO_DATABASE"
 const val NOW_DYNAMIC_PERIOD = "NOW_DYNAMIC_PERIOD"
 const val DATE_RANGE2 = "DATE_RANGE2"
 const val CURRENCY = "CURRENCY"
-const val IS_LOADING = "IS_LOADING"
-const val CURRENCY_LIST = "CURRENCY_LIST"
-const val CHECKED_DATA = "CHECKED_DATA"
-const val NAVIGATION_TYPE = "NAVIGATION_TYPE"
+const val EDIT_TEXT = "EDIT_TEXT"
 const val SHARE_LANGUAGE = "language"
 const val SHARE_THEME = "theme"
 const val SCRIPT_CBR_LINK = "https://www.cbr.ru/scripts/"

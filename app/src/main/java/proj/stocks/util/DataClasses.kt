@@ -57,10 +57,10 @@ data class CurrencyRecordCBR(
 @Parcelize
 @Root(strict = false, name = "ValCurs")
 data class CurrencyListDynamicCBR(
-    @field:Attribute(name = "name") var name: String?,
+    @field:Attribute(name = "ID") var val_id: String?,
     @field:Attribute(name = "DateRange1") var dateRange1: String?,
     @field:Attribute(name = "DateRange2") var dateRange2: String?,
-    @field:Attribute(name = "ID") var val_id: String?,
+    @field:Attribute(name = "name") var name: String?,
     @field:ElementList(inline = true, entry = "Record") var list: ArrayList<CurrencyRecordCBR>?
 ) : Parcelable {
     constructor() : this(null, null, null, null, null)

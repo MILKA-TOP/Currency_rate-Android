@@ -1,4 +1,4 @@
-package proj.stocks.fragments
+package proj.stocks.ui.fragments
 
 import android.graphics.Color
 import android.os.Bundle
@@ -7,7 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.core.content.res.ResourcesCompat
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.data.Entry
@@ -18,28 +19,24 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.color.MaterialColors
-import kotlinx.coroutines.*
-import org.threeten.bp.LocalDate
-import proj.stocks.AppMain
 import proj.stocks.R
 import proj.stocks.databinding.FragmentCurrencyInfoBinding
 import proj.stocks.util.*
+import proj.stocks.view_model.ItemListDialogFragmentViewModel
+import proj.stocks.view_model.ItemListDialogFragmentViewModelFactory
 
 class ItemListDialogFragment(
-    private var currency: CurrencyDataCBR?,
-    private var dateRange2: String?
+    private var mCurrency: CurrencyDataCBR?,
+    private var mDateRange2: String?
 ) : BottomSheetDialogFragment() {
 
     constructor() : this(null, null)
 
-    private var scope = CoroutineScope(Dispatchers.Default)
-    private var dateRange1: String? = null
     private var nowDynamicPeriodType: DynamicPeriod = DynamicPeriod.UNKNOWN
-    private var isClicked = false
-    private var currencyDynamicList = ArrayList<GraphDynamicPoint>()
+
     private lateinit var binding: FragmentCurrencyInfoBinding
     private lateinit var behavior: BottomSheetBehavior<FrameLayout>
-
+    private lateinit var fragViewModel: ItemListDialogFragmentViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,17 +49,41 @@ class ItemListDialogFragment(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) return
 
-        currency = savedInstanceState.getParcelable(CURRENCY)
-        dateRange2 = savedInstanceState.getString(DATE_RANGE2)
-        nowDynamicPeriodType = savedInstanceState.getParcelable(NOW_DYNAMIC_PERIOD)!!
+        if (savedInstanceState != null) reInitArgs(savedInstanceState)
+
+        fragViewModel = ViewModelProvider(
+            this,
+            ItemListDialogFragmentViewModelFactory(mCurrency!!, mDateRange2)
+        )[ItemListDialogFragmentViewModel::class.java]
+
+        observeInit()
 
     }
 
+    private fun reInitArgs(savedInstanceState: Bundle) {
+        mCurrency = savedInstanceState.getParcelable(CURRENCY)
+        mDateRange2 = savedInstanceState.getString(DATE_RANGE2)
+        nowDynamicPeriodType = savedInstanceState.getParcelable(NOW_DYNAMIC_PERIOD)!!
+    }
+
+    private fun observeInit() {
+        fragViewModel.getDynamicResult().observe(this) {
+            when (it.status) {
+                Result.Status.LOADING -> loading()
+                else -> {
+
+                    if (Result.Status.ERROR == it.status) showErrorToast()
+                    drawGraph(it.data)
+                    binding.loadingProgressbar.visibleLayout.visibility = View.INVISIBLE
+                }
+            }
+        }
+    }
+
+
     override fun onStart() {
         super.onStart()
-        if (dateRange2 == null) dateRange2 = LocalDate.now().format(dateFormatter)
 
         setTitleView()
 
@@ -73,81 +94,45 @@ class ItemListDialogFragment(
 
             check(minusTypeMap[nowDynamicPeriodType]!!.bindId)
         }
-        if (!isClicked) makeClick(minusTypeMap[nowDynamicPeriodType]!!.bindId)
 
         behavior = (dialog as BottomSheetDialog).behavior
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-
     private fun makeClick(checkedId: Int) {
-        isClicked = true
         nowDynamicPeriodType =
             minusTypeMap.filterValues { it.bindId == checkedId }.keys.first()
-
-        if (nowDynamicPeriodType != DynamicPeriod.UNKNOWN) {
-            binding.standardBottomSheet.charCode.clearAnimation()
-            binding.standardBottomSheet.charCode.visibility = View.INVISIBLE
-            binding.loadingProgressbar.visibleLayout.visibility = View.VISIBLE
-            getCurrencyDynamic()
-        }
-        isClicked = false
+        fragViewModel.updateDynamicResult(nowDynamicPeriodType)
     }
 
-
-    private fun getCurrencyDynamic() {
-        if (scope.isActive) {
-            scope.cancel()
-            scope = CoroutineScope(Dispatchers.Default)
-        }
-
-        scope.launch {
-            currencyDynamicList = ArrayList()
-            try {
-                dateRange1 = getMinusDate()
-                val currencyDynamic = AppMain.responseService.getCurrencyDynamic(
-                    dateRange1!!,
-                    dateRange2!!,
-                    currency!!.currId
-                )
-
-                for (currencyData in currencyDynamic.list!!) currencyDynamicList.add(
-                    GraphDynamicPoint(
-                        currencyData.date!!,
-                        stringToFloat(currencyData.value!!) / stringToFloat(currencyData.nominal!!)
-                    )
-                )
-
-            } catch (e: Exception) {
-                Log.d("NetworkError", e.toString())
-            } finally {
-                withContext(Dispatchers.Main) {
-                    drawGraph(currencyDynamicList)
-                    binding.loadingProgressbar.visibleLayout.visibility = View.INVISIBLE
-                }
-            }
-        }
+    private fun loading() {
+        binding.standardBottomSheet.charCode.clearAnimation()
+        binding.standardBottomSheet.charCode.visibility = View.INVISIBLE
+        binding.loadingProgressbar.visibleLayout.visibility = View.VISIBLE
     }
 
-
-    private fun drawGraph(currencyDynamicList: ArrayList<GraphDynamicPoint>) {
+    private fun drawGraph(currencyDynamic: CurrencyListDynamicCBR?) {
+        val currencyDynamicList = fragViewModel.getDynamicPointList(currencyDynamic)
         val graph = binding.graph
         val xAxis = graph.xAxis
         val yLeftAxis = graph.axisLeft
 
         // Draw xAxis background
         with(xAxis) {
-            valueFormatter = MyAxisFormatter()
+            valueFormatter = MyAxisFormatter(currencyDynamicList)
             enableGridDashedLine(10f, 10f, 0f)
             labelRotationAngle = 45f
             textColor = MaterialColors.getColor(context, R.attr.colorOnPrimary, null)
         }
 
         // Show dynamic of currency
-        if (currencyDynamicList.isNotEmpty()) drawDeltaRange(
-            currencyDynamicList.first(),
-            currencyDynamicList.last()
-        )
+        if (currencyDynamicList.isNotEmpty()) {
+            val delta = fragViewModel.drawDeltaRange(
+                currencyDynamicList.first(),
+                currencyDynamicList.last()
+            )
+            setDeltaDynamic(delta, currencyDynamic!!.dateRange1!!, currencyDynamic.dateRange2!!)
+        } else binding.standardBottomSheet.charCode.visibility = View.INVISIBLE
 
         // Get Entry list
         var counter = 0
@@ -191,52 +176,40 @@ class ItemListDialogFragment(
         }
     }
 
-    private fun getMinusDate(): String =
-        LocalDate.parse(dateRange2, dateFormatter).minus(
-            minusTypeMap[nowDynamicPeriodType]!!.count,
-            minusTypeMap[nowDynamicPeriodType]!!.minusType
-        ).format(dateFormatter)
-
-
     private fun setTitleView() {
-        with(binding.standardBottomSheet) {
-            name.text = CURRENCY_NAME_CODE.format(currency!!.name, currency!!.charCode)
-            charCode.text = currency!!.charCode
-        }
+        binding.standardBottomSheet.name.text =
+            CURRENCY_NAME_CODE.format(mCurrency!!.name, mCurrency!!.charCode)
     }
 
-
-    private fun drawDeltaRange(first: GraphDynamicPoint, last: GraphDynamicPoint) {
-        val delta = -100f + last.value * 100f / first.value
-        val inputString = CURRENCY_DELTA_RANGE.format(dateRange1, dateRange2, delta) + "%"
+    private fun setDeltaDynamic(delta: Float, dateRange1: String, dateRange2: String) {
         with(binding.standardBottomSheet.charCode) {
-            if (delta > 0) setTextColor(colorFromRes(R.color.plus_delta))
-            else setTextColor(colorFromRes(R.color.minus_delta))
-            text = inputString
+            if (delta > 0) setTextColor(colorFromRes(R.color.plus_delta, resources))
+            else setTextColor(colorFromRes(R.color.minus_delta, resources))
+
+            val outputText = CURRENCY_DELTA_RANGE.format(dateRange1, dateRange2, delta) + "%"
+            text = outputText
             visibility = View.VISIBLE
             this.startAnimation(getAlphaAnimation())
         }
     }
 
-    private fun colorFromRes(id: Int): Int = ResourcesCompat.getColor(resources, id, null)
+    private fun showErrorToast() {
+        Toast.makeText(context, "ERROR", Toast.LENGTH_SHORT).show()
+    }
 
 
     override fun onSaveInstanceState(outState: Bundle) {
 
         super.onSaveInstanceState(outState)
         with(outState) {
-            putParcelable(CURRENCY, currency)
+            putParcelable(CURRENCY, mCurrency)
             putParcelable(NOW_DYNAMIC_PERIOD, nowDynamicPeriodType)
-            putString(DATE_RANGE2, dateRange2)
+            putString(DATE_RANGE2, mDateRange2)
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        scope.cancel()
-    }
-
-    inner class MyAxisFormatter : IndexAxisValueFormatter() {
+    inner class MyAxisFormatter(private var currencyDynamicList: ArrayList<GraphDynamicPoint>) :
+        IndexAxisValueFormatter() {
 
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
             val index = value.toInt()

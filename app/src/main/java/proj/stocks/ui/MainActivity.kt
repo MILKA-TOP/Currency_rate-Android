@@ -1,4 +1,4 @@
-package proj.stocks
+package proj.stocks.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +7,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
+import proj.stocks.R
 import proj.stocks.databinding.ActivityMainBinding
 import proj.stocks.util.getUserLanguage
 import proj.stocks.util.getUserTheme

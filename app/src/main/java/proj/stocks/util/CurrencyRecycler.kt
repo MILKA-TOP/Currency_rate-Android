@@ -1,5 +1,6 @@
 package proj.stocks.util
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,16 +38,6 @@ class CurrencyAdapter(
 
         return currencyHolder
 
-    }
-
-    fun getIndexByCurrencyId(index: String): Int =
-        currencies.indexOf(currencies.firstOrNull { it.currId == index })
-
-
-    fun removeByCurrencyId(index: String, indexUpdate: Int) {
-        val deleteIndex = getIndexByCurrencyId(index)
-        if (deleteIndex != -1) currencies.removeAt(deleteIndex)
-        notifyItemRemoved(indexUpdate)
     }
 
     override fun onBindViewHolder(holder: CurrentViewHolder, position: Int) =

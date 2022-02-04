@@ -1,4 +1,4 @@
-package proj.stocks.cbr_conntecion
+package proj.stocks.model.network
 
 import proj.stocks.util.CurrencyListDailyCBR
 import proj.stocks.util.CurrencyListDynamicCBR
