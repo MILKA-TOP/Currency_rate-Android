@@ -3,15 +3,20 @@
 package proj.stocks
 
 import android.app.Application
-import androidx.room.Room
+import com.ctc.wstx.stax.WstxInputFactory
+import com.ctc.wstx.stax.WstxOutputFactory
+import com.fasterxml.jackson.dataformat.xml.XmlFactory
+import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.jakewharton.threetenabp.AndroidThreeTen
 import proj.stocks.model.database.AppDatabase
 import proj.stocks.model.network.StockCBRService
-import proj.stocks.util.DATABASE_NAME
 import proj.stocks.util.SCRIPT_CBR_LINK
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory
+import retrofit2.converter.jackson.JacksonConverterFactory
+import javax.xml.stream.XMLInputFactory
+import javax.xml.stream.XMLOutputFactory
+
 
 class AppMain : Application() {
 
@@ -24,20 +29,22 @@ class AppMain : Application() {
 
     }
 
-
-    /* *
-    *  Причины того, что я использую deprecated SimpleXmlConverterFactory:
-    *  1) Note that JAXB does not work on Android:
-    * [https://github.com/square/retrofit/blob/master/retrofit-converters/jaxb/README.md];
-    *
-    *  2) TikXml не может адаптироваться под заданную нам кодировку
-    * (при Windows-1251, которая передается от CBR, выводятся "�");
-    * */
-
     private fun retrofitConnection() {
+        val inputFactory: XMLInputFactory = WstxInputFactory()
+
+        val outFactory: XMLOutputFactory = WstxOutputFactory()
+
+        val xf: XmlFactory = XmlFactory.builder()
+            .xmlInputFactory(inputFactory)
+            .xmlOutputFactory(outFactory)
+            .build()
+        val mapper = XmlMapper(xf)
+
+
         val mRetrofit: Retrofit = Retrofit.Builder()
             .baseUrl(SCRIPT_CBR_LINK)
-            .addConverterFactory(SimpleXmlConverterFactory.create())
+            //.addConverterFactory(SimpleXmlConverterFactory.create())
+            .addConverterFactory(JacksonConverterFactory.create(mapper))
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .build()
         responseService = mRetrofit.create(StockCBRService::class.java)

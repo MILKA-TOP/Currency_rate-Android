@@ -8,7 +8,7 @@ import proj.stocks.util.CurrencyDataCBR
 import proj.stocks.util.DATABASE_NAME
 
 
-@Database(entities = [CurrencyDataCBR::class], version = 3)
+@Database(entities = [CurrencyDataCBR::class], version = 5)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun responseDao(): ResponseCBR_DAO
 

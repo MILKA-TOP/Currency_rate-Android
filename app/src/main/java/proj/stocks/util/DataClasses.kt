@@ -4,23 +4,22 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import kotlinx.parcelize.Parcelize
-import org.simpleframework.xml.Attribute
-import org.simpleframework.xml.Element
-import org.simpleframework.xml.ElementList
-import org.simpleframework.xml.Root
 import org.threeten.bp.temporal.TemporalUnit
 
 @Parcelize
 @Entity(tableName = DATABASE_NAME)
-@Root(strict = false, name = "Valute")
+@JacksonXmlRootElement(localName = "Valute")
 data class CurrencyDataCBR(
-    @PrimaryKey @field:Attribute(name = "ID") var currId: String,
-    @ColumnInfo(name = "NumCode") @field:Element(name = "NumCode") var numCode: Int?,
-    @ColumnInfo(name = "CharCode") @field:Element(name = "CharCode") var charCode: String?,
-    @ColumnInfo(name = "Name") @field:Element(name = "Name") var name: String?,
-    @ColumnInfo(name = "Value") @field:Element(name = "Value") var value: String?,
-    @ColumnInfo(name = "Nominal") @field:Element(name = "Nominal") var nominal: String?,
+    @PrimaryKey @field:JacksonXmlProperty(localName = "ID", isAttribute = true) var currId: String,
+    @ColumnInfo(name = "NumCode") @field:JacksonXmlProperty(localName = "NumCode") var numCode: String?,
+    @ColumnInfo(name = "CharCode") @field:JacksonXmlProperty(localName = "CharCode") var charCode: String?,
+    @ColumnInfo(name = "Nominal") @field:JacksonXmlProperty(localName = "Nominal") var nominal: String?,
+    @ColumnInfo(name = "Name") @field:JacksonXmlProperty(localName = "Name") var name: String?,
+    @ColumnInfo(name = "Value") @field:JacksonXmlProperty(localName = "Value") var value: String?,
     @ColumnInfo(name = "isFavourite") var isFavourite: Boolean = false
 ) : Parcelable {
     constructor() : this("", null, null, null, null, null, false)
@@ -34,34 +33,38 @@ data class CurrencyDataCBR(
 
 
 @Parcelize
-@Root(strict = false, name = "ValCurs")
+@JacksonXmlRootElement(localName = "ValCurs")
 data class CurrencyListDailyCBR(
-    @field:Attribute(name = "Date") var date: String?,
-    @field:Attribute(name = "name") var name: String?,
-    @field:ElementList(inline = true, entry = "Valute") var list: ArrayList<CurrencyDataCBR>?
+    @field:JacksonXmlProperty(localName = "Date", isAttribute = true) var date: String?,
+    @field:JacksonXmlProperty(localName = "name", isAttribute = true) var name: String?,
+
+    @field:JacksonXmlElementWrapper(useWrapping = false)
+    @field:JacksonXmlProperty(localName = "Valute") var list: ArrayList<CurrencyDataCBR>?
 ) : Parcelable {
     constructor() : this(null, null, null)
 }
 
 @Parcelize
-@Root(strict = false, name = "Record")
+@JacksonXmlRootElement(localName = "Record")
 data class CurrencyRecordCBR(
-    @field:Attribute(name = "Date") var date: String?,
-    @field:Attribute(name = "Id") var val_id: String?,
-    @field:Element(name = "Nominal") var nominal: String?,
-    @field:Element(name = "Value") var value: String?
+    @field:JacksonXmlProperty(localName = "Date", isAttribute = true) var date: String?,
+    @field:JacksonXmlProperty(localName = "Id", isAttribute = true) var val_id: String?,
+    @field:JacksonXmlProperty(localName = "Nominal") var nominal: String?,
+    @field:JacksonXmlProperty(localName = "Value") var value: String?
 ) : Parcelable {
     constructor() : this(null, null, null, null)
 }
 
 @Parcelize
-@Root(strict = false, name = "ValCurs")
+@JacksonXmlRootElement(localName = "ValCurs")
 data class CurrencyListDynamicCBR(
-    @field:Attribute(name = "ID") var val_id: String?,
-    @field:Attribute(name = "DateRange1") var dateRange1: String?,
-    @field:Attribute(name = "DateRange2") var dateRange2: String?,
-    @field:Attribute(name = "name") var name: String?,
-    @field:ElementList(inline = true, entry = "Record") var list: ArrayList<CurrencyRecordCBR>?
+    @field:JacksonXmlProperty(localName = "ID", isAttribute = true) var val_id: String?,
+    @field:JacksonXmlProperty(localName = "DateRange1", isAttribute = true) var dateRange1: String?,
+    @field:JacksonXmlProperty(localName = "DateRange2", isAttribute = true) var dateRange2: String?,
+    @field:JacksonXmlProperty(localName = "name", isAttribute = true) var name: String?,
+
+    @field:JacksonXmlElementWrapper(useWrapping = false)
+    @field:JacksonXmlProperty(localName = "Record") var list: ArrayList<CurrencyRecordCBR>?
 ) : Parcelable {
     constructor() : this(null, null, null, null, null)
 }
