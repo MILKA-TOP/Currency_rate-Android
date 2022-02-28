@@ -109,7 +109,7 @@ val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
 const val CURRENCY_NAME_CODE = "%s (%s)"
 const val CURRENCY_DELTA_RANGE = "(%s - %s): %.2f"
-const val CURRENCY_VALUE = "%s %s = %.2f руб."
+const val CURRENCY_VALUE = "%s %s = %.2f ₽"
 const val DATABASE_NAME = "INFO_DATABASE"
 const val NOW_DYNAMIC_PERIOD = "NOW_DYNAMIC_PERIOD"
 const val DATE_RANGE2 = "DATE_RANGE2"

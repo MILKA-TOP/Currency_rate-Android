@@ -1,5 +1,6 @@
 package proj.stocks.model.repositories
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import proj.stocks.AppMain
 import proj.stocks.model.database.ResponseCBR_DAO
@@ -33,7 +34,8 @@ class CurrencyListRepository(
             currencyDaily.list = getFilterList(filterString)
             currencyMutableLiveData.postValue(Result.success(currencyDaily))
 
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.e("Caught exception", e.toString())
         }
     }
 
@@ -61,6 +63,7 @@ class CurrencyListRepository(
             )
         } catch (e: Exception) {
             currencyMutableLiveData.postValue(Result.error())
+            Log.e("Caught exception", e.toString())
         }
 
     }
